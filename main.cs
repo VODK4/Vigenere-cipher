@@ -20,6 +20,7 @@ namespace Encryption
             Console.WriteLine("Encryption 0.1 Experimental build\n");
             Console.WriteLine("Chose Methode:");
             Console.WriteLine("1.    Encryption");
+            Console.WriteLine("2.    Decryption");
             methode_1 = Console.ReadLine();
 
             switch (methode_1)
@@ -27,6 +28,10 @@ namespace Encryption
                 case "1":
                     Console.Clear();
                     Encryption();
+                    break;
+                case "2":
+                    Console.Clear();
+                    Decryption();   
                     break;
             }
         }
@@ -99,9 +104,56 @@ namespace Encryption
             Console.Read();
         }
 
+        static void Decryption()
+        {
+            string encodedInput;
+            int encodedInputLength;
+            int encodedInputLength_ = 0;
+            char process_1;
+            string key;
+            int keyLength;
+            int keyLength_ = 0;
+            char correspondingKey;
+
+            Console.WriteLine("Enter encoded text:");
+            encodedInput = Console.ReadLine();
+            Console.WriteLine("Enter key:");
+            key = Console.ReadLine();
+            Console.Clear();
+            Console.WriteLine("Encoded input:");
+            Console.WriteLine(encodedInput);
+            Console.WriteLine("Key:");
+            Console.WriteLine(key);
+            Console.WriteLine("----------------------------------------");
+            Console.WriteLine("Product:");
+
+            encodedInputLength = encodedInput.Length;
+            keyLength = key.Length;
+
+            while (encodedInputLength_ != encodedInputLength)
+            {
+                if (keyLength_ < keyLength - 1)
+                {
+                    correspondingKey = key[keyLength_];
+
+                    keyLength_++;
+                }
+                else
+                {
+                    correspondingKey = key[keyLength - 1];
+                    keyLength_ = 0;
+                }
+
+                process_1 = encodedInput[encodedInputLength_];
+                dictionaryDecrypt(process_1.ToString(), correspondingKey.ToString());
+                encodedInputLength_++;
+            }
+
+            Console.ReadLine();
+        }
+
         static void dictionaryEncrypt(string input, string correspondingKey)
         {
-
             int keyAlphabetPos = alphabet.IndexOf(correspondingKey) + 1;
             int inputAlphabetPos = alphabet.IndexOf(input) + 1;
 
@@ -124,6 +176,31 @@ namespace Encryption
             else if (input == " ")
             {
                 input = "";
+            }
+            else
+            {
+                Console.Write(input);
+            }
+        }
+
+        static void dictionaryDecrypt(string input, string correspondingKey)
+        {
+            int keyAlphabetPos = alphabet.IndexOf(correspondingKey) + 1;
+            int inputAlphabetPos = alphabet.IndexOf(input) + 1;
+
+            if (alphabet.Contains(input))
+            {
+                input = (inputAlphabetPos - keyAlphabetPos).ToString();
+
+                if (Int32.Parse(input) >= 1)
+                {
+                    input = alphabet[Int32.Parse(input)];
+                }
+                else
+                {
+                    input = alphabet[Int32.Parse(input) + 26];
+                }
+                Console.Write(input);
             }
             else
             {
