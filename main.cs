@@ -101,7 +101,7 @@ namespace Encryption
                 rawInputLength_++;
             }
 
-            Console.Read();
+            restart();
         }
 
         static void Decryption()
@@ -130,6 +130,14 @@ namespace Encryption
             encodedInputLength = encodedInput.Length;
             keyLength = key.Length;
 
+            key = key.ToLower();
+            key = key.Replace("ğ", "g");
+            key = key.Replace("ü", "u");
+            key = key.Replace("ş", "s");
+            key = key.Replace("ı", "i");
+            key = key.Replace("ö", "o");
+            key = key.Replace("ç", "c");
+
             while (encodedInputLength_ != encodedInputLength)
             {
                 if (keyLength_ < keyLength - 1)
@@ -149,7 +157,7 @@ namespace Encryption
                 encodedInputLength_++;
             }
 
-            Console.ReadLine();
+            restart();
         }
 
         static void dictionaryEncrypt(string input, string correspondingKey)
@@ -207,5 +215,27 @@ namespace Encryption
                 Console.Write(input);
             }
         }
+
+        static void restart()
+        {
+            Console.ReadLine();
+            Console.Clear();
+            Console.WriteLine("Do you want to continiue? (Y/N)");
+            string choice = Console.ReadLine().ToLower();
+            switch(choice)
+            {
+                case "y":
+                    Main();
+                    break;
+                case "n":
+                    System.Environment.Exit(1);
+                    break;
+                default:
+                    Console.WriteLine("Unknown input.");
+                    restart();
+                    break;
+            }
+        }
+
     }
 }
