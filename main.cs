@@ -1,4 +1,4 @@
-using System;
+sing System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,6 +21,7 @@ namespace Encryption
             Console.WriteLine("Chose Methode:");
             Console.WriteLine("1.    Encryption");
             Console.WriteLine("2.    Decryption");
+            Console.WriteLine("3.    Key Exchange Test");
             methode_1 = Console.ReadLine();
 
             switch (methode_1)
@@ -32,6 +33,10 @@ namespace Encryption
                 case "2":
                     Console.Clear();
                     Decryption();   
+                    break;
+                case "3":
+                    Console.Clear();
+                    KeyExchange();
                     break;
             }
         }
@@ -237,5 +242,98 @@ namespace Encryption
             }
         }
 
+        static void KeyExchange()
+        {
+            Random rnd = new Random();
+            //Public
+            int p = 0;
+            int g = 0;
+
+            bool pIsPrime = false;
+            while (pIsPrime == false)
+            {
+                int number = rnd.Next(1, 100);
+
+                if (IsPrime(number))
+                {
+                    p = number;
+                    pIsPrime = true;
+                }
+                else
+                {
+                    pIsPrime = false;
+                }
+            }
+
+            bool gIsPrime = false;
+            while (gIsPrime == false)
+            {
+                int number = rnd.Next(1, 100);
+
+                if (IsPrime(number))
+                {
+                    g = number;
+                    gIsPrime = true;
+                }
+                else
+                {
+                    gIsPrime = false;
+                }
+            }
+
+            //Private
+            int C1 = rnd.Next(1,100);
+            int C2 = rnd.Next(1,100);
+
+            int aKeyPublic = toPower(g, C1, p) % p;
+            int bKeyPublic = toPower(g, C2, p) % p;
+
+            int aKey = toPower(bKeyPublic, C1, p) % p;
+            int bKey = toPower(aKeyPublic, C2, p) % p;
+
+            //Final
+            Console.WriteLine("Key 1:    " + aKey);
+            Console.WriteLine("Key 2:    " + bKey);
+
+            if (aKey == bKey)
+            {
+                Console.WriteLine("Sucsess");
+            }
+            else
+            {
+                Console.WriteLine("Fail");
+            }
+
+
+
+            Console.ReadLine();
+            KeyExchange();
+            //restart();
+        }
+
+        public static bool IsPrime(int number)
+        {
+            if (number <= 1) return false;
+            if (number == 2) return false;
+            if (number % 2 == 0) return false;
+
+            var boundary = (int)Math.Floor(Math.Sqrt(number));
+
+            for (int i = 3; i <= boundary; i += 2)
+                if (number % i == 0)
+                    return false;
+
+            return true;
+        }
+
+        static int toPower(int num1, int num2, int mod)
+        {
+            int cache = num1;
+            for (int i = 1; i < num2; i++)
+            {
+                cache = (cache * num1) % mod;
+            }
+            return cache;
+        }
     }
 }
